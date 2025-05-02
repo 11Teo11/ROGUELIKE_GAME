@@ -1,0 +1,186 @@
+#include "Config.h"
+#include "Player.h"
+#include <SFML/Window/Keyboard.hpp>
+#include <algorithm>
+
+Player::Player(sf::Vector2f pos) {
+    shape.setSize(sf::Vector2f(PLAYER_WIDTH, PLAYER_HEIGHT));
+    shape.setOrigin(shape.getSize()/2.f);
+    shape.setPosition(pos.x * TILE_SIZE, pos.y * TILE_SIZE);
+    shape.setFillColor(sf::Color::Green);
+    shape.setOutlineThickness(2.f);
+    shape.setOutlineColor(sf::Color::Black);
+
+    sf::Texture playerTexture;
+
+    // for(int i = 0; i < 12; i++)
+    // {
+    //     if(playerTexture.loadFromFile("assets/player/player" + std::to_string(i) + ".png"))
+    //         textures.push_back(playerTexture); 
+    // }
+    for(int i = 1; i <= 12; i++)
+    {
+        if(playerTexture.loadFromFile("assets/player/player_" + std::to_string(i) + ".png"))
+            textures.push_back(playerTexture); 
+    }
+    sprite.setTexture(textures[7]);
+    sprite.setScale(2.5f, 2.5f);
+    sprite.setOrigin(textures[7].getSize().x / 2.f, textures[7].getSize().y / 2.f);
+    sprite.setPosition(shape.getPosition());
+    
+    speed = PLAYER_SPEED;
+    currentDirection = sf::Vector2f(0, 1);
+    shootCooldown = PLAYER_SHOOT_COOLDOWN;
+    shootTimer = 0.f;
+    animationTimer = 0.f;
+    frameDelay = FRAME_DELAY;
+    currentFrame = 7;
+}
+
+Player* Player::clone() const 
+{
+    return new Player(*this);
+}
+
+void Player::update(float dt, const Map& map) 
+{
+    sf::Vector2f direction(0,0);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        direction = sf::Vector2f(0, -1);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        direction = sf::Vector2f(0, 1);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        direction = sf::Vector2f(-1, 0);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        direction = sf::Vector2f(1, 0);
+
+    int base = 0;
+    if (currentDirection == sf::Vector2f(0,-1))
+        base = 0;
+    else if (currentDirection ==  sf::Vector2f(1,0))
+        base = 3;
+    else if (currentDirection ==  sf::Vector2f(0,1))
+        base = 6;
+    else if (currentDirection ==  sf::Vector2f(-1,0))
+        base = 9;
+
+
+    if (direction != sf::Vector2f(0,0))
+        {
+            this->currentDirection = direction;
+            animationTimer += dt;
+
+            if( animationTimer >= frameDelay)
+            {
+                animationTimer = 0.f;
+
+                if(currentFrame == base)
+                    currentFrame = base + 2;
+                else
+                    currentFrame = base;
+            }
+        }
+    else
+        currentFrame = base + 1;
+    
+    sprite.setTexture(textures[currentFrame]);
+
+    sf::Vector2f movement = direction * speed * dt;
+    sf::Vector2f nextPos = shape.getPosition() + movement;
+
+    float halfW = shape.getSize().x / 2.f;
+    float halfH = shape.getSize().y / 2.f;
+
+    bool collision = false;
+
+    if (direction.y < 0) // sus
+        collision = map.isWallAt(nextPos.x - halfW, nextPos.y - halfH) ||
+                    map.isWallAt(nextPos.x + halfW, nextPos.y - halfH);
+    else if (direction.y > 0) // jos
+        collision = map.isWallAt(nextPos.x - halfW, nextPos.y + halfH) ||
+                    map.isWallAt(nextPos.x + halfW, nextPos.y + halfH);
+    else if (direction.x < 0) // stânga
+        collision = map.isWallAt(nextPos.x - halfW, nextPos.y - halfH) ||
+                    map.isWallAt(nextPos.x - halfW, nextPos.y + halfH);
+    else if (direction.x > 0) // dreapta
+        collision = map.isWallAt(nextPos.x + halfW, nextPos.y - halfH) ||
+                    map.isWallAt(nextPos.x + halfW, nextPos.y + halfH);
+    
+    if (!collision)
+        shape.move(movement);
+
+    sprite.setPosition(shape.getPosition());
+}
+
+
+
+void Player::handleShooting()
+{
+    sf::Vector2f shootDir(0,0);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        shootDir = sf::Vector2f(0,-1);
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        shootDir = sf::Vector2f(0,1);
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        shootDir = sf::Vector2f(1,0);
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        shootDir = sf::Vector2f(-1,0);
+
+    if( shootDir != sf::Vector2f(0,0) && shootTimer <= 0)
+    {
+        projectiles.emplace_back(shape.getPosition(), shootDir);
+        shootTimer = shootCooldown;
+    }
+}
+
+void Player::updateProjectiles(float dt, const Map& map, std::vector<Entity*>& entities)
+{
+    if ( shootTimer > 0.f)
+        shootTimer -= dt;
+    
+    for(int i = 0; i < projectiles.size(); i++)
+    {
+        projectiles[i].update(dt, map);
+
+        for (int j = 0; j < entities.size(); j++) 
+        {
+            Enemy* enemy = dynamic_cast<Enemy*>(entities[j]);
+            if (enemy && projectiles[i].hitsEnemy(*enemy)) 
+            {
+                enemy->takeDamage(3); // config
+                projectiles.erase(projectiles.begin() + i);
+                i--;
+                break;
+            }
+        }
+
+        if (i>=0 && projectiles[i].getVelocity() == sf::Vector2f(0.f,0.f))
+        {
+            projectiles.erase(projectiles.begin() + i);
+            i--;
+        }
+    }
+}
+    
+void Player::draw(sf::RenderWindow& window) 
+{
+    window.draw(this->sprite);
+}
+    
+void Player::drawProjectiles(sf::RenderWindow& window)
+{
+    for ( int i = 0; i< projectiles.size(); i++)
+        projectiles[i].draw(window);
+}
+    
+sf::Vector2f Player::getPosition() const 
+{
+    return shape.getPosition();
+}
+    
+const std::vector<Projectile>& Player::getProjectiles() const
+{
+    return projectiles;
+}
