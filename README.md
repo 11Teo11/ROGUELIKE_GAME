@@ -1,6 +1,6 @@
 ROGUELIKE_GAME
 
-Snstructiuni player:
+Instructiuni player:
 WASD -> pentru a te misca
 sageti sus, jos, dreapta, stanga -> pentru a impusca cu proiectile
 
