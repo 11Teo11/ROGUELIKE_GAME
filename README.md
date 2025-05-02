@@ -7,7 +7,7 @@ sageti sus, jos, dreapta, stanga -> pentru a impusca cu proiectile
 
 Cerinte - TEMA 2
 
-* separarea codului din clase in fisiere header si surse ✅
+* separarea codului din clase in fisiere header si surse ✅ ( in folderul src )
 	- fara using namespace std ✅
 
 * mosteniri
