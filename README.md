@@ -35,11 +35,13 @@ Cerinte - TEMA 2
 Bibliografie
 
 https://youtube.com/playlist?list=PLs6oRBoE2-Q_fX_rzraQekRoL7Kr7s5xi&si=xo4ucD_nmqxjzWZu
+
 https://www.sfml-dev.org/
 
 
 Assets
 
 https://scut.itch.io/7drl-tileset-2018
+
 https://beowulf.itch.io/free-pixel-dungeon-explorer-16x16
 
