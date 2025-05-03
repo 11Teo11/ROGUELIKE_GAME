@@ -25,10 +25,12 @@ const float ENEMY_WIDTH = TILE_SIZE * 0.75f;
 const float ENEMY_HEIGHT = TILE_SIZE * 0.75f;
 const float ENEMY_SPEED = 120.f;
 const int ENEMY_MAX_HEALTH = 10;
+const float ENEMY_FOLLOW_PLAYER = TILE_SIZE * 2;
 
 // Dimensiuni proiectil
 const float PROJECTILE_RADIUS = TILE_SIZE * 0.1f;
 const float PROJECTILE_SPEED = 300.f;
+const float PROJECTILE_DAMAGE = 3.f;
 
 // Animatie
 const float FRAME_DELAY = 0.1f;
