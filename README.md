@@ -2,11 +2,15 @@ ROGUELIKE_GAME
 
 Instructiuni player:
 WASD -> pentru a te misca
+
 sageti sus, jos, dreapta, stanga -> pentru a impusca cu proiectile
 
 Instructiuni rulare:
+
 In folderul principal -> comanda:
+
 g++ -std=c++17 -ISFML/include -LSFML/lib src/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -o main.exe
+
 Apoi dublu-click pe main.exe sau comanda ./main.exe
 
 
@@ -39,10 +43,14 @@ Cerinte - TEMA 2
 Bibliografie
 
 https://youtube.com/playlist?list=PLs6oRBoE2-Q_fX_rzraQekRoL7Kr7s5xi&si=xo4ucD_nmqxjzWZu
+
 https://www.sfml-dev.org/
 
 
 Assets
-https://scut.itch.io/7drl-tileset-2018
-https://beowulf.itch.io/free-pixel-dungeon-explorer-16x16
 
+harta: https://scut.itch.io/7drl-tileset-2018
+
+player: https://beowulf.itch.io/free-pixel-dungeon-explorer-16x16
+
+inamici: https://opengameart.org/content/grue
