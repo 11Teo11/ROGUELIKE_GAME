@@ -10,9 +10,20 @@ Enemy::Enemy(sf::Vector2f pos)
     shape.setOrigin(shape.getSize()/2.f);
     shape.setPosition(pos);
 
-    shape.setFillColor(sf::Color::Red);
-    shape.setOutlineThickness(2.f);
-    shape.setOutlineColor(sf::Color::Black);
+    // shape.setFillColor(sf::Color::Red);
+    // shape.setOutlineThickness(2.f);
+    // shape.setOutlineColor(sf::Color::Black);
+
+    sf::Texture enemyTexture;
+
+    for(int i = 0; i < 4; i++)
+    {
+        if(enemyTexture.loadFromFile("assets/enemy/enemy" + std::to_string(i) + ".png"))
+            textures.push_back(enemyTexture);
+    }
+    sprite.setTexture(textures[0]);
+    sprite.setOrigin(textures[0].getSize().x / 2.f, textures[0].getSize().y / 2.f);
+    sprite.setPosition(shape.getPosition());
 
     speed = ENEMY_SPEED;
     health = ENEMY_MAX_HEALTH;
@@ -43,13 +54,25 @@ void Enemy::update(float dt, const Map& map)
 
         int dir = std::rand() % 4;
         if (dir == 0) 
-            direction = sf::Vector2f(1, 0);
+            {
+                direction = sf::Vector2f(1, 0);
+                sprite.setTexture(textures[0]);
+            }
         else if (dir == 1) 
-            direction = sf::Vector2f(-1, 0);
+            {
+                direction = sf::Vector2f(-1, 0);
+                sprite.setTexture(textures[2]);
+            }
         else if (dir == 2) 
-            direction = sf::Vector2f(0, 1); 
+            {
+                direction = sf::Vector2f(0, 1); 
+                sprite.setTexture(textures[3]);
+            }
         else 
-            direction = sf::Vector2f(0, -1); 
+            {
+                direction = sf::Vector2f(0, -1); 
+                sprite.setTexture(textures[1]);
+            }
     }
 
     sf::Vector2f movement = direction * speed * dt;
@@ -73,6 +96,8 @@ void Enemy::update(float dt, const Map& map)
 
     if (!collision)
         shape.move(movement);
+
+    sprite.setPosition(shape.getPosition());
 }
 
 void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, float dt)
@@ -81,22 +106,34 @@ void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, floa
 
     float dist = std::sqrt(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
 
-    if (dist <= 120.f) // config
+    if (dist <= ENEMY_FOLLOW_PLAYER)
     {
         toPlayer = sf::Vector2f(std::abs(toPlayer.x),std::abs(toPlayer.y));
         if (toPlayer.x > toPlayer.y)
             {
                 if (shape.getPosition().x > playerPos.x)
-                    direction = sf::Vector2f(-1,0);
+                    {
+                        direction = sf::Vector2f(-1,0);
+                        sprite.setTexture(textures[2]);
+                    }
                 else
-                    direction = sf::Vector2f(1,0);
+                    {
+                        direction = sf::Vector2f(1,0);
+                        sprite.setTexture(textures[0]);
+                    }
             }
         else
             {
                 if(shape.getPosition().y > playerPos.y)
-                    direction = sf::Vector2f(0,-1);
+                    {
+                        direction = sf::Vector2f(0,-1);
+                        sprite.setTexture(textures[1]);
+                    }
                 else
-                    direction = sf::Vector2f(0,1);
+                    {
+                        direction = sf::Vector2f(0,1);
+                        sprite.setTexture(textures[3]);
+                    }
             }
         directionTimer = 0.f;
     }
@@ -106,7 +143,7 @@ void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, floa
 
 void Enemy::draw(sf::RenderWindow& window)
 {
-    window.draw(shape);
+    window.draw(sprite);
 }
 
 sf::Vector2f Enemy::getPosition() const
