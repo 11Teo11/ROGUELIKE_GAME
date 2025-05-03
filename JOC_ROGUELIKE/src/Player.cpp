@@ -1,23 +1,15 @@
 #include "Config.h"
 #include "Player.h"
 #include <SFML/Window/Keyboard.hpp>
-#include <algorithm>
 
-Player::Player(sf::Vector2f pos) {
+Player::Player(sf::Vector2f pos) 
+{
     shape.setSize(sf::Vector2f(PLAYER_WIDTH, PLAYER_HEIGHT));
     shape.setOrigin(shape.getSize()/2.f);
     shape.setPosition(pos.x * TILE_SIZE, pos.y * TILE_SIZE);
-    shape.setFillColor(sf::Color::Green);
-    shape.setOutlineThickness(2.f);
-    shape.setOutlineColor(sf::Color::Black);
 
     sf::Texture playerTexture;
 
-    // for(int i = 0; i < 12; i++)
-    // {
-    //     if(playerTexture.loadFromFile("assets/player/player" + std::to_string(i) + ".png"))
-    //         textures.push_back(playerTexture); 
-    // }
     for(int i = 1; i <= 12; i++)
     {
         if(playerTexture.loadFromFile("assets/player/player_" + std::to_string(i) + ".png"))
@@ -94,16 +86,16 @@ void Player::update(float dt, const Map& map)
 
     bool collision = false;
 
-    if (direction.y < 0) // sus
+    if (direction.y < 0)
         collision = map.isWallAt(nextPos.x - halfW, nextPos.y - halfH) ||
                     map.isWallAt(nextPos.x + halfW, nextPos.y - halfH);
-    else if (direction.y > 0) // jos
+    else if (direction.y > 0)
         collision = map.isWallAt(nextPos.x - halfW, nextPos.y + halfH) ||
                     map.isWallAt(nextPos.x + halfW, nextPos.y + halfH);
-    else if (direction.x < 0) // stânga
+    else if (direction.x < 0)
         collision = map.isWallAt(nextPos.x - halfW, nextPos.y - halfH) ||
                     map.isWallAt(nextPos.x - halfW, nextPos.y + halfH);
-    else if (direction.x > 0) // dreapta
+    else if (direction.x > 0)
         collision = map.isWallAt(nextPos.x + halfW, nextPos.y - halfH) ||
                     map.isWallAt(nextPos.x + halfW, nextPos.y + halfH);
     
@@ -149,14 +141,14 @@ void Player::updateProjectiles(float dt, const Map& map, std::vector<Entity*>& e
             Enemy* enemy = dynamic_cast<Enemy*>(entities[j]);
             if (enemy && projectiles[i].hitsEnemy(*enemy)) 
             {
-                enemy->takeDamage(3); // config
+                enemy->takeDamage(PROJECTILE_DAMAGE);
                 projectiles.erase(projectiles.begin() + i);
                 i--;
                 break;
             }
         }
 
-        if (i>=0 && projectiles[i].getVelocity() == sf::Vector2f(0.f,0.f))
+        if (i >= 0 && projectiles[i].getVelocity() == sf::Vector2f(0.f,0.f))
         {
             projectiles.erase(projectiles.begin() + i);
             i--;
@@ -166,7 +158,7 @@ void Player::updateProjectiles(float dt, const Map& map, std::vector<Entity*>& e
     
 void Player::draw(sf::RenderWindow& window) 
 {
-    window.draw(this->sprite);
+    window.draw(sprite);
 }
     
 void Player::drawProjectiles(sf::RenderWindow& window)
