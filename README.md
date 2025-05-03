@@ -9,9 +9,9 @@ Instructiuni rulare:
 
 in folderul principal -> comanda:
 
-g++ -std=c++17 -IC:/SFML-2.5.1/include -LC:/SFML-2.5.1/lib src/main.cpp src/Player.cpp src/Map.cpp src/Projectile.cpp src/Enemy.cpp -lsfml-graphics -lsfml-window -lsfml-system -o main.exe
+g++ -std=c++17 -ISFML/include -LSFML/lib src/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -o main.exe
 
-Apoi dublu-click pe main.exe / comanda ./main.exe
+Apoi dublu-click pe main.exe sau comanda ./main.exe
 
 
 Cerinte - TEMA 2
