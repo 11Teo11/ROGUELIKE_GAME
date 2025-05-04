@@ -10,10 +10,6 @@ Enemy::Enemy(sf::Vector2f pos)
     shape.setOrigin(shape.getSize()/2.f);
     shape.setPosition(pos);
 
-    // shape.setFillColor(sf::Color::Red);
-    // shape.setOutlineThickness(2.f);
-    // shape.setOutlineColor(sf::Color::Black);
-
     sf::Texture enemyTexture;
 
     for(int i = 0; i < 4; i++)
@@ -36,7 +32,6 @@ Enemy::Enemy(sf::Vector2f pos)
     directionTimer = 0.f;
     directionChangeInterval = 1.f;
 
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
 
 Enemy* Enemy::clone() const 
@@ -138,7 +133,7 @@ void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, floa
         directionTimer = 0.f;
     }
 
-    update(dt, map); // Folosește direcția actualizată
+    update(dt, map);
 }
 
 void Enemy::draw(sf::RenderWindow& window)
