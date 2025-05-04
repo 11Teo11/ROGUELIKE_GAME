@@ -24,7 +24,7 @@ private:
     void setTextures();
 
 public:
-    Player(sf::Vector2f pos);
+    Player();
     Player* clone() const ;
 
     void update(float dt,const Map& map) override; 
