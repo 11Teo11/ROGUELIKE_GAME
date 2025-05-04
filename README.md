@@ -24,12 +24,12 @@ Cerinte - TEMA 2
 
 * functii virtuale (pure)
 	- minim o functie virtuala va fi specifica temei ✅ ( update, draw, getPosition) ✅
-	- functiile virtuale vor fi apelate prin pointeri la clasa de baza ✅ ( print Entity* in Player.cpp si main.cpp)
-	- pointerii la clasa de baza vor fi atribute ale altei clase, nu doar pointeri/referinte in main
+	- functiile virtuale vor fi apelate prin pointeri la clasa de baza ✅ ( prin Entity* in Player.cpp si Game.cpp)
+	- pointerii la clasa de baza vor fi atribute ale altei clase, nu doar pointeri/referinte in main ✅ ( in Game.h / Game.cpp)
 
 * constructori virtuali (clone) ✅
 
-* dynamic_cast ✅ ( in Player.cpp in updateProjectiles si in main.cpp)
+* dynamic_cast ✅ ( in Player.cpp in updateProjectiles si in Game.cpp)
 
 * exceptii ✅ ( GameException -> AssetsLoadException, EntityCreationExcpetion)
 
