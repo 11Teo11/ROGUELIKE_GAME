@@ -2,11 +2,11 @@
 #include "Player.h"
 #include <SFML/Window/Keyboard.hpp>
 
-Player::Player(sf::Vector2f pos) 
+Player::Player() 
 {
     shape.setSize(sf::Vector2f(PLAYER_WIDTH, PLAYER_HEIGHT));
     shape.setOrigin(shape.getSize()/2.f);
-    shape.setPosition(pos.x * TILE_SIZE, pos.y * TILE_SIZE);
+    shape.setPosition(PLAYER_POSITION.x * TILE_SIZE, PLAYER_POSITION.y * TILE_SIZE);
 
     sf::Texture playerTexture;
 
