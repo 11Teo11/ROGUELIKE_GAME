@@ -19,7 +19,12 @@ const std::vector<Entity*>& Game::getEntities() const
     return entities;
 }
 
-void Game::update(float dt, Player& player) 
+const Player& Game::getPlayer() const
+{
+    return player;
+}
+
+void Game::update(float dt) 
 {
     player.update(dt, map);
     player.handleShooting();
@@ -42,7 +47,7 @@ void Game::update(float dt, Player& player)
     }
 }
 
-void Game::draw(sf::RenderWindow& window, Player& player) 
+void Game::draw(sf::RenderWindow& window) 
 {
     map.draw(window);
     player.drawProjectiles(window);
