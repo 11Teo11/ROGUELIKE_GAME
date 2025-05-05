@@ -5,13 +5,7 @@ WASD -> pentru a te misca
 
 sageti sus, jos, dreapta, stanga -> pentru a impusca cu proiectile
 
-Instructiuni rulare:
-
-In folderul principal -> comanda:
-
-g++ -std=c++17 -ISFML/include -LSFML/lib src/*.cpp -lsfml-graphics -lsfml-window -lsfml-system -o main.exe
-
-Apoi dublu-click pe main.exe sau comanda ./main.exe
+Pentru a juca -> dublu-click pe build_and_run.bat
 
 
 Cerinte - TEMA 2
