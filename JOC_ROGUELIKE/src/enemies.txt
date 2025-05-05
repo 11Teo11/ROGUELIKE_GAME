@@ -1,3 +1,4 @@
+// Pozitiile inamicilor
 5 3
 7 9
 10 8
