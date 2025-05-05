@@ -12,5 +12,4 @@ public:
     virtual sf::Vector2f getPosition() const = 0;
     static int getInstanceCount() { return instanceCount = 0; } // metoda statica pentru a obtine numarul de instante
 
-    virtual ~Entity() {}
 };
