@@ -6,7 +6,9 @@
 #include "Game.h"
 #include "AssetsLoadException.h"
 #include "EntityCreationException.h"
+#include "FileLoadException.h"
 #include <iostream>
+#include <fstream>
 
 void verifyView(sf::View& view);
 
@@ -22,17 +24,20 @@ int main()
         Game game(map, player);
 
         std::srand(static_cast<unsigned>(std::time(nullptr)));
-        
-        sf::Vector2f posEnemies[ENEMIES_NUMBER];
-        posEnemies[0] = sf::Vector2f(5, 3) * TILE_SIZE + sf::Vector2f(ENEMY_WIDTH / 2.f, ENEMY_HEIGHT / 2.f);
-        posEnemies[1] = sf::Vector2f(7, 9) * TILE_SIZE + sf::Vector2f(ENEMY_WIDTH / 2.f, ENEMY_HEIGHT / 2.f);
-        posEnemies[2] = sf::Vector2f(10, 8) * TILE_SIZE + sf::Vector2f(ENEMY_WIDTH / 2.f, ENEMY_HEIGHT / 2.f);
 
+        std::ifstream file(FILE_ENEMIES_POS);
+        if (!file.is_open())
+            throw FileLoadException("Nu s-a putut deschide fisierul " + FILE_ENEMIES_POS);
+
+        int x,y;
         for(int i = 0; i < ENEMIES_NUMBER; i++)
         {
-            if (posEnemies[i].x < 0 || posEnemies[i].y < 0 || posEnemies[i].x > MAP_WIDTH || posEnemies[i].y > MAP_HEIGHT)
+            file >> x >> y;
+            x *= TILE_SIZE;
+            y *= TILE_SIZE;
+            if (x < 0 || y < 0 || x > MAP_WIDTH || y > MAP_HEIGHT)
                 throw EntityCreationException("Inamic inafara hartii");
-            game.addEntity(new Enemy(posEnemies[i]));
+            game.addEntity(new Enemy(sf::Vector2f(x,y)));
         }
 
         sf::View view;
@@ -55,9 +60,9 @@ int main()
                     window.close();
             }
 
-            game.update(dt, player);
+            game.update(dt);
 
-            view.setCenter(player.getPosition());
+            view.setCenter(game.getPlayer().getPosition());
             verifyView(view);
 
             window.setView(view);
@@ -65,7 +70,7 @@ int main()
 
             // ----------------- DRAW -----------------
             window.clear(sf::Color::Black);
-            game.draw(window, player);
+            game.draw(window);
             window.display();
             // ----------------- DRAW -----------------
         }
@@ -73,12 +78,17 @@ int main()
     } 
     catch (const AssetsLoadException& e) 
     {
-        std::cerr << "Eroare la incarcarea hartii: " << e.what() << '\n';
+        std::cerr << e.what() << '\n';
         return EXIT_FAILURE;
     } 
     catch (const EntityCreationException& e) 
     {
-        std::cerr << "Eroare entitate: " << e.what() << '\n';
+        std::cerr << e.what() << '\n';
+        return EXIT_FAILURE;
+    }
+    catch (const FileLoadException& e)
+    {
+        std::cerr << e.what() << '\n';
         return EXIT_FAILURE;
     }
 
