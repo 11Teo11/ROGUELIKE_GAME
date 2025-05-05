@@ -13,9 +13,10 @@ private:
 public:
     Game(Map& map, Player& player);
 
-    void update(float dt, Player& player);
-    void draw(sf::RenderWindow& window, Player& player);
+    void update(float dt);
+    void draw(sf::RenderWindow& window);
 
     void addEntity(Entity* e);
     const std::vector<Entity*>& getEntities() const;
+    const Player& getPlayer() const;
 };
