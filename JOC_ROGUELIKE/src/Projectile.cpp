@@ -57,9 +57,8 @@ bool Projectile::hitsEnemy(Enemy& enemy)
     float dy = shape.getPosition().y - enemy.getPosition().y;
     float distance = std::sqrt(dx * dx + dy * dy);
 
-    if (distance < shape.getRadius() + 20.f) { // ajustăm raza de coliziune
+    if (distance < shape.getRadius() + 20.f)
         return true;
-    }
+        
     return false;
-    // return distance < shape.getRadius() + 20.f;
 }
