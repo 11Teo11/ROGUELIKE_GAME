@@ -123,10 +123,10 @@ Map::Map()
 void Map::draw(sf::RenderWindow& window) 
 {
     int x,y;
-    for (y=0; y<grid.size(); y++)
-        for (x = 0; x<grid[y].size(); x++)
+    for (y = 0; y < grid.size(); y++)
+        for (x = 0; x < grid[y].size(); x++)
         {
-            std::string type = getTileType(y,x);
+            std::string type = getTileType(y, x);
             tile.setTexture(&tileTextures[type]);
             tile.setPosition(x * TILE_SIZE, y * TILE_SIZE);
             window.draw(tile);
@@ -138,9 +138,9 @@ bool Map::isWallAt(int x, int y) const
     int tileX = x / TILE_SIZE;
     int tileY = y / TILE_SIZE;
 
-    if (tileY < 0 || tileY >= TILE_ROWS || tileX < 0 || tileX >= TILE_COLS) {
+    if (tileY < 0 || tileY >= TILE_ROWS || tileX < 0 || tileX >= TILE_COLS)
         return false;
-    }
+        
     return grid[tileY][tileX] == 1 || grid[tileY][tileX] == 2;
 }
 
