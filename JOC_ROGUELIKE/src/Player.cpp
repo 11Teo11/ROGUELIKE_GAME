@@ -21,12 +21,21 @@ Player::Player()
     sprite.setPosition(shape.getPosition());
     
     speed = PLAYER_SPEED;
+    health = PLAYER_MAX_HEALTH;
     currentDirection = sf::Vector2f(0, 1);
     shootCooldown = PLAYER_SHOOT_COOLDOWN;
     shootTimer = 0.f;
     animationTimer = 0.f;
     frameDelay = FRAME_DELAY;
     currentFrame = 7;
+
+    healthBarBack.setSize(sf::Vector2f(PLAYER_WIDTH, H_BAR_HEIGHT));
+    healthBarBack.setFillColor(H_BAR_BACK_COLOR);
+    healthBarBack.setOrigin(PLAYER_WIDTH / 2.f, 0.f);
+
+    healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH, H_BAR_HEIGHT));
+    healthBarFront.setFillColor(H_BAR_FRONT_COLOR_P);
+    healthBarFront.setOrigin(PLAYER_WIDTH / 2.f, 0.f);
 }
 
 Player* Player::clone() const 
@@ -103,6 +112,12 @@ void Player::update(float dt, const Map& map)
         shape.move(movement);
 
     sprite.setPosition(shape.getPosition());
+
+    sf::Vector2f pos = shape.getPosition();
+    healthBarBack.setPosition(pos.x, pos.y - PLAYER_HEIGHT / 2.f - H_BAR_PADDING);
+    healthBarFront.setPosition(pos.x, pos.y - PLAYER_HEIGHT / 2.f - H_BAR_PADDING);
+
+    healthBarFront.setSize(sf::Vector2f(PLAYER_WIDTH * health / PLAYER_MAX_HEALTH, H_BAR_HEIGHT));
 }
 
 
@@ -159,6 +174,8 @@ void Player::updateProjectiles(float dt, const Map& map, std::vector<Entity*>& e
 void Player::draw(sf::RenderWindow& window) 
 {
     window.draw(sprite);
+    window.draw(healthBarBack);
+    window.draw(healthBarFront);
 }
     
 void Player::drawProjectiles(sf::RenderWindow& window)
