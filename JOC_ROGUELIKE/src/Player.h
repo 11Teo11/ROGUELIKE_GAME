@@ -20,8 +20,11 @@ private:
     float animationTimer;
     float frameDelay;
     int currentFrame;
+    int health;
+    sf::RectangleShape healthBarBack;
+    sf::RectangleShape healthBarFront;
 
-    void setTextures();
+    void setTextures(); // de completat ar trebui pt orice entity
 
 public:
     Player();
