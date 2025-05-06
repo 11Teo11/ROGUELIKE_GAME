@@ -32,6 +32,15 @@ Enemy::Enemy(sf::Vector2f pos)
     directionTimer = 0.f;
     directionChangeInterval = 1.f;
 
+    // healthbar
+    healthBarBack.setSize(sf::Vector2f(ENEMY_WIDTH, H_BAR_HEIGHT));
+    healthBarBack.setFillColor(H_BAR_BACK_COLOR);
+    healthBarBack.setOrigin(ENEMY_WIDTH / 2.f, 0.f);
+
+    healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH, H_BAR_HEIGHT));
+    healthBarFront.setFillColor(H_BAR_FRONT_COLOR);
+    healthBarFront.setOrigin(ENEMY_WIDTH / 2.f, 0.f);
+
 }
 
 Enemy* Enemy::clone() const 
@@ -93,6 +102,13 @@ void Enemy::update(float dt, const Map& map)
         shape.move(movement);
 
     sprite.setPosition(shape.getPosition());
+
+
+    sf::Vector2f pos = shape.getPosition();
+    healthBarBack.setPosition(pos.x, pos.y - ENEMY_HEIGHT / 2.f - H_BAR_PADDING);
+    healthBarFront.setPosition(pos.x, pos.y - ENEMY_HEIGHT / 2.f - H_BAR_PADDING);
+
+    healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH * health / ENEMY_MAX_HEALTH, H_BAR_HEIGHT));
 }
 
 void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, float dt)
@@ -139,6 +155,8 @@ void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, floa
 void Enemy::draw(sf::RenderWindow& window)
 {
     window.draw(sprite);
+    window.draw(healthBarBack);
+    window.draw(healthBarFront);
 }
 
 sf::Vector2f Enemy::getPosition() const
