@@ -1,5 +1,6 @@
 #include "Config.h"
 #include "Enemy.h"
+#include "Projectile.h"
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -32,14 +33,16 @@ Enemy::Enemy(sf::Vector2f pos)
     directionTimer = 0.f;
     directionChangeInterval = 1.f;
 
-    // healthbar
     healthBarBack.setSize(sf::Vector2f(ENEMY_WIDTH, H_BAR_HEIGHT));
     healthBarBack.setFillColor(H_BAR_BACK_COLOR);
     healthBarBack.setOrigin(ENEMY_WIDTH / 2.f, 0.f);
 
     healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH, H_BAR_HEIGHT));
-    healthBarFront.setFillColor(H_BAR_FRONT_COLOR);
+    healthBarFront.setFillColor(H_BAR_FRONT_COLOR_E);
     healthBarFront.setOrigin(ENEMY_WIDTH / 2.f, 0.f);
+
+    shootTimer = 0.f;
+    shootCooldown = ENEMY_SHOOT_COOLDOWN;
 
 }
 
@@ -109,6 +112,9 @@ void Enemy::update(float dt, const Map& map)
     healthBarFront.setPosition(pos.x, pos.y - ENEMY_HEIGHT / 2.f - H_BAR_PADDING);
 
     healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH * health / ENEMY_MAX_HEALTH, H_BAR_HEIGHT));
+
+    if(shootTimer > 0)
+        shootTimer -= dt;
 }
 
 void Enemy::moveTowardPlayer(const sf::Vector2f& playerPos, const Map& map, float dt)
@@ -164,6 +170,10 @@ sf::Vector2f Enemy::getPosition() const
     return shape.getPosition();
 }
 
+const std::vector<Projectile>& Enemy::getProjectiles() const {
+    return projectiles;
+}
+
 void Enemy::takeDamage(int dmg)
 {
     health -= dmg;
@@ -172,4 +182,52 @@ void Enemy::takeDamage(int dmg)
 bool Enemy::isAlive() const 
 {
     return health > 0;
+}
+
+void Enemy::shootPlayer(const sf::Vector2f& playerPos)
+{
+    if (shootTimer > 0.f)
+        return;
+    
+    sf::Vector2f toPlayer = playerPos - shape.getPosition();
+
+    float dist = std::sqrt(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
+
+    if (dist < ENEMY_FOLLOW_PLAYER)
+    {
+        sf::Vector2f dir = toPlayer / dist; // directie normalizata
+        projectiles.emplace_back(shape.getPosition(), dir);
+        shootTimer = shootCooldown;
+    }
+}
+
+void Enemy::updateProjectiles(float dt, const Map& map, Player& player)
+{
+    if ( shootTimer > 0.f)
+        shootTimer -= dt;
+    
+    for(int i = 0; i < projectiles.size(); i++)
+    {
+        projectiles[i].update(dt, map);
+
+        if(projectiles[i].hitsPlayer(player))
+        {
+            player.takeDamage(PROJECTILE_DAMAGE);
+            projectiles.erase(projectiles.begin() + i);
+            i--;
+            break;
+        }
+
+        if (i >= 0 && projectiles[i].getVelocity() == sf::Vector2f(0.f,0.f))
+        {
+            projectiles.erase(projectiles.begin() + i);
+            i--;
+        }
+    }
+}
+
+void Enemy::drawProjectiles(sf::RenderWindow& window)
+{
+    for ( int i = 0; i < projectiles.size(); i++)
+        projectiles[i].draw(window);
 }
