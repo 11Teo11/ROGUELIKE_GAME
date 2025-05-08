@@ -1,7 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
-#include "Enemy.h"
+
+class Player;
+class Enemy;
+class Map;
 
 class Projectile : public Entity
 {
@@ -19,4 +22,5 @@ public:
     sf::Vector2f getVelocity() const;
     sf::Vector2f getPosition() const;
     bool hitsEnemy(Enemy& enemy);
+    bool hitsPlayer(Player& player);
 };
