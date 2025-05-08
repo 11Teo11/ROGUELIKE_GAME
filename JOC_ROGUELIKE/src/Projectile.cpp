@@ -57,7 +57,19 @@ bool Projectile::hitsEnemy(Enemy& enemy)
     float dy = shape.getPosition().y - enemy.getPosition().y;
     float distance = std::sqrt(dx * dx + dy * dy);
 
-    if (distance < shape.getRadius() + 20.f)
+    if (distance < shape.getRadius() + PROJECTILE_HIT_RADIUS)
+        return true;
+        
+    return false;
+}
+
+bool Projectile::hitsPlayer(Player& player)
+{
+    float dx = shape.getPosition().x - player.getPosition().x;
+    float dy = shape.getPosition().y - player.getPosition().y;
+    float distance = std::sqrt(dx * dx + dy * dy);
+
+    if (distance < shape.getRadius() + PROJECTILE_HIT_RADIUS)
         return true;
         
     return false;
