@@ -24,7 +24,7 @@ private:
     sf::RectangleShape healthBarBack;
     sf::RectangleShape healthBarFront;
 
-    void setTextures(); // de completat ar trebui pt orice entity
+    void setTextures(); 
 
 public:
     Player();
@@ -40,4 +40,5 @@ public:
 
     void handleShooting();
     const std::vector<Projectile>& getProjectiles() const;
+    void takeDamage(int dmg);
 };
