@@ -193,3 +193,8 @@ const std::vector<Projectile>& Player::getProjectiles() const
 {
     return projectiles;
 }
+
+void Player::takeDamage(int dmg)
+{
+    health -= dmg;
+}
