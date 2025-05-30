@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 
-Enemy::Enemy(sf::Vector2f pos)
+Enemy::Enemy(sf::Vector2f pos) : health(ENEMY_MAX_HEALTH)
 {
     shape.setSize(sf::Vector2f(ENEMY_WIDTH,ENEMY_HEIGHT));
     shape.setOrigin(shape.getSize()/2.f);
@@ -22,8 +22,9 @@ Enemy::Enemy(sf::Vector2f pos)
     sprite.setOrigin(textures[0].getSize().x / 2.f, textures[0].getSize().y / 2.f);
     sprite.setPosition(shape.getPosition());
 
+    
+
     speed = ENEMY_SPEED;
-    health = ENEMY_MAX_HEALTH;
 
     animationTimer = 0.f;
     frameDelay = FRAME_DELAY;
@@ -111,7 +112,7 @@ void Enemy::update(float dt, const Map& map)
     healthBarBack.setPosition(pos.x, pos.y - ENEMY_HEIGHT / 2.f - H_BAR_PADDING);
     healthBarFront.setPosition(pos.x, pos.y - ENEMY_HEIGHT / 2.f - H_BAR_PADDING);
 
-    healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH * health / ENEMY_MAX_HEALTH, H_BAR_HEIGHT));
+    healthBarFront.setSize(sf::Vector2f(ENEMY_WIDTH * health.getRatio(), H_BAR_HEIGHT));
 
     if(shootTimer > 0)
         shootTimer -= dt;
@@ -176,12 +177,12 @@ const std::vector<Projectile>& Enemy::getProjectiles() const {
 
 void Enemy::takeDamage(int dmg)
 {
-    health -= dmg;
+    health.takeDamage(dmg);
 }
 
 bool Enemy::isAlive() const 
 {
-    return health > 0;
+    return health.getCurrent() > 0;
 }
 
 void Enemy::shootPlayer(const sf::Vector2f& playerPos)
