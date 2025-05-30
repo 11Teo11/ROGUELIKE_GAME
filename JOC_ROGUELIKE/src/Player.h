@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "Stats.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 
@@ -20,11 +21,14 @@ private:
     float animationTimer;
     float frameDelay;
     int currentFrame;
-    int health;
+
+    // atribut template
+    Stats<int> health;
+    
     sf::RectangleShape healthBarBack;
     sf::RectangleShape healthBarFront;
 
-    void setTextures(); 
+    void setTextures();
 
 public:
     Player();
@@ -41,4 +45,5 @@ public:
     void handleShooting();
     const std::vector<Projectile>& getProjectiles() const;
     void takeDamage(int dmg);
+    bool isAlive() const;
 };
