@@ -3,11 +3,7 @@
 #include "Player.h"
 #include <iostream>
 
-Game::Game(Map& map, Player& player)
-{
-    this->map = map;
-    this->player = player;
-}
+Game::Game(const Map& map,const Player& player) : map(map), player(player) {}
 
 void Game::addEntity(Entity* e) 
 {
@@ -26,9 +22,12 @@ const Player& Game::getPlayer() const
 
 void Game::update(float dt) 
 {
-    player.update(dt, map);
-    player.handleShooting();
-    player.updateProjectiles(dt, map, entities);
+    if(player.isAlive())
+    {
+        player.update(dt, map);
+        player.handleShooting();
+        player.updateProjectiles(dt, map, entities);
+    }
 
     for(int i = 0; i < entities.size(); i++)
     {
@@ -62,8 +61,18 @@ void Game::draw(sf::RenderWindow& window)
         Enemy* enemy = dynamic_cast<Enemy*>(entities[i]);
         if(enemy)
             enemy->drawProjectiles(window);
-            
+
         entities[i]->draw(window);
     }
     player.draw(window);
+}
+
+void Game::clearEntities()
+{
+    for(int i = 0; i < entities.size(); i++)
+        {
+            Player* player = dynamic_cast<Player*>(entities[i]);
+            if(!player)
+                delete entities[i];
+        }
 }
