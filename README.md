@@ -1,11 +1,13 @@
 ROGUELIKE_GAME
 
 Instructiuni player:
+
+Pentru a juca -> dublu-click pe build_and_run.bat
+
 WASD -> pentru a te misca
 
 sageti sus, jos, dreapta, stanga -> pentru a impusca cu proiectile
 
-Pentru a juca -> dublu-click pe build_and_run.bat
 
 
 Cerinte - TEMA 2
@@ -15,7 +17,7 @@ Cerinte - TEMA 2
 
 * mosteniri
 	- minim o clasa de baza si 3 clase derivate din aceeasi ierarhie ✅ ( Entity -> Player, Enemy, Projectile; GameException -> AssetsLoadException, EntityCreationException)
- 	- ierarhia trebuie sa fie cu baza proprie ✅ ( Entity.h ) 
+ 	- ierarhia trebuie sa fie cu baza proprie ✅ ( Entity ) 
 
 * functii virtuale (pure)
 	- minim o functie virtuala va fi specifica temei ✅ ( update, draw, getPosition)
@@ -29,15 +31,28 @@ Cerinte - TEMA 2
 	- dynamic_cast ✅ ( in Player.cpp in updateProjectiles si in Game.cpp)
 
 * exceptii
-  	- ierarhie proprie derivata din std::exception ✅ ( GameException -> AssetsLoadException, EntityCreationExcpetion)
-  	- minim 3 clase pentru erori specifice distincte 2/3
+  	- ierarhie proprie derivata din std::exception ✅ ( GameException -> AssetsLoadException, EntityCreationExcpetion, FileLoadException, FontLoadException )
+  	- minim 3 clase pentru erori specifice distincte ✅ ( AssetsLoadException, EntityCreationException, FileLoadException, FontLoadException )
   	- throw in constructor ( Main.cpp ) catch in main ✅
 
-* functii si atribute statice ✅ ( in Entity.h )
+* functii si atribute statice ✅ ( in Entity.h, Stats.h )
 
 * cat mai multe const ✅
 
 * STL ✅
+
+
+Cerinte - TEMA 3
+
+* Clasa sablon (template) ✅ ( Stats )
+
+* Atribut de tip T sau care depinde de T ✅ ( T current, T maximum )
+
+* Functie membru care sa depinda de T ✅ ( takeDamage, getRatio )
+
+* Functie normala/libera template ✅ ( isCritical )
+
+* Design patterns ✅ ( Game )
 
 
 Bibliografie
@@ -54,3 +69,8 @@ harta: https://scut.itch.io/7drl-tileset-2018
 player: https://beowulf.itch.io/free-pixel-dungeon-explorer-16x16
 
 inamici: https://opengameart.org/content/grue
+
+
+Link Github
+
+https://github.com/11Teo11/ROGUELIKE_GAME
