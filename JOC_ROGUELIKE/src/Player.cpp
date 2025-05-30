@@ -1,8 +1,9 @@
 #include "Config.h"
 #include "Player.h"
 #include <SFML/Window/Keyboard.hpp>
+#include <cmath>
 
-Player::Player() 
+Player::Player() : health(PLAYER_MAX_HEALTH)
 {
     shape.setSize(sf::Vector2f(PLAYER_WIDTH, PLAYER_HEIGHT));
     shape.setOrigin(shape.getSize()/2.f);
@@ -15,13 +16,14 @@ Player::Player()
         if(playerTexture.loadFromFile("assets/player/player_" + std::to_string(i) + ".png"))
             textures.push_back(playerTexture); 
     }
+    
     sprite.setTexture(textures[7]);
     sprite.setScale(2.5f, 2.5f);
     sprite.setOrigin(textures[7].getSize().x / 2.f, textures[7].getSize().y / 2.f);
     sprite.setPosition(shape.getPosition());
     
+    
     speed = PLAYER_SPEED;
-    health = PLAYER_MAX_HEALTH;
     currentDirection = sf::Vector2f(0, 1);
     shootCooldown = PLAYER_SHOOT_COOLDOWN;
     shootTimer = 0.f;
@@ -117,7 +119,7 @@ void Player::update(float dt, const Map& map)
     healthBarBack.setPosition(pos.x, pos.y - PLAYER_HEIGHT / 2.f - H_BAR_PADDING);
     healthBarFront.setPosition(pos.x, pos.y - PLAYER_HEIGHT / 2.f - H_BAR_PADDING);
 
-    healthBarFront.setSize(sf::Vector2f(PLAYER_WIDTH * health / PLAYER_MAX_HEALTH, H_BAR_HEIGHT));
+    healthBarFront.setSize(sf::Vector2f(PLAYER_WIDTH * health.getRatio(), H_BAR_HEIGHT));
 }
 
 
@@ -174,8 +176,29 @@ void Player::updateProjectiles(float dt, const Map& map, std::vector<Entity*>& e
 void Player::draw(sf::RenderWindow& window) 
 {
     window.draw(sprite);
+
+    bool critical = isCritical(health, H_CRTITICAL_TRESHOLD);
+    float offsetX = 0.f;
+    float offsetY = 0.f;
+    if(critical)
+    {
+        static sf::Clock shakeClock;
+        float t = shakeClock.getElapsedTime().asSeconds();
+        offsetX = std::sin(t * 30.f) * 2.f;
+        offsetY = std::sin(t * 25.f) * 2.f;
+    }
+
+    sf::Vector2f backPos  = healthBarBack.getPosition();
+    sf::Vector2f frontPos = healthBarFront.getPosition();
+
+    healthBarBack.setPosition (backPos  + sf::Vector2f(offsetX, offsetY));
+    healthBarFront.setPosition(frontPos + sf::Vector2f(offsetX, offsetY));
+
     window.draw(healthBarBack);
     window.draw(healthBarFront);
+
+    healthBarBack.setPosition (backPos);
+    healthBarFront.setPosition(frontPos);
 }
     
 void Player::drawProjectiles(sf::RenderWindow& window)
@@ -196,5 +219,10 @@ const std::vector<Projectile>& Player::getProjectiles() const
 
 void Player::takeDamage(int dmg)
 {
-    health -= dmg;
+    health.takeDamage(dmg);
+}
+
+bool Player::isAlive() const 
+{
+    return health.getCurrent() > 0;
 }
