@@ -1,5 +1,7 @@
 ROGUELIKE_GAME
 
+https://github.com/user-attachments/assets/9d021529-1d2d-4880-97cc-fe76ae7cb582
+
 Instructiuni player:
 
 Pentru a juca -> dublu-click pe build_and_run.bat
